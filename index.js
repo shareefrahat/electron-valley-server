@@ -24,6 +24,19 @@ async function run() {
   try {
     await client.connect();
     console.log("Database: MongoDB is connected");
+
+    const productCollection = client
+      .db("ElectronValley")
+      .collection("products");
+
+    //--------------GET : READ--------------\\
+
+    app.get("/products", async (req, res) => {
+      const query = {};
+      const cursor = productCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
   } finally {
     // client.close()
   }
