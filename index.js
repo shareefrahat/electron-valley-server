@@ -30,6 +30,14 @@ async function run() {
       .db("ElectronValley")
       .collection("products");
 
+    //--------------POST : Create---------------\\
+
+    app.post("/products", async (req, res) => {
+      const newProduct = req.body;
+      const result = await productCollection.insertOne(newProduct);
+      res.send(result);
+    });
+
     //--------------GET : READ--------------\\
 
     app.get("/products", async (req, res) => {
