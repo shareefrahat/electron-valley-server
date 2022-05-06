@@ -73,6 +73,17 @@ async function run() {
       const result = await productCollection.deleteOne(query);
       res.send(result);
     });
+
+    //--------------GET : READ--------------\\
+
+    app.get("/userItems", async (req, res) => {
+      const owner = req.query.owner;
+      console.log(owner);
+      const query = { owner: owner };
+      const cursor = productCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
   } finally {
     // client.close()
   }
