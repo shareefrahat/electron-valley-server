@@ -104,11 +104,16 @@ async function run() {
     //--------------GET : READ--------------\\
 
     app.get("/userItems", verifyToken, async (req, res) => {
-      const owner = req.query.owner;
-      const query = { owner: owner };
-      const cursor = productCollection.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
+      const decodedEmail = req.decoded.email;
+      const ownerEmail = req.query.owner;
+      if (decodedEmail === ownerEmail) {
+        const query = { owner: ownerEmail };
+        const cursor = productCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } else {
+        return res.status(403).send({ message: "Forbidden access" });
+      }
     });
   } finally {
   }
