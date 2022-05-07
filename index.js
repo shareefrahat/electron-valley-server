@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const objectId = require("mongodb").ObjectId;
 const port = process.env.PORT || 5000;
@@ -30,6 +31,9 @@ async function run() {
       .db("ElectronValley")
       .collection("products");
 
+    //--------------AUTH : TOKEN-------------\\
+
+    app.get("/getToken");
     //--------------POST : Create---------------\\
 
     app.post("/products", async (req, res) => {
@@ -78,14 +82,12 @@ async function run() {
 
     app.get("/userItems", async (req, res) => {
       const owner = req.query.owner;
-      console.log(owner);
       const query = { owner: owner };
       const cursor = productCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
   } finally {
-    // client.close()
   }
 }
 
