@@ -13,6 +13,22 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+function verifyToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  console.log(authHeader);
+  if (!authHeader) {
+    return res.status(401).send({ message: "Unauthorized access" });
+  }
+  const userToken = authHeader.split(" ")[1];
+  jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+    if (error) {
+      return res.status(403).send({ message: "Forbidden access" });
+    }
+    req.decoded = decoded;
+  });
+  next();
+}
+
 //--------------MongoDB : Database--------------\\
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.6olzz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -40,6 +56,7 @@ async function run() {
       });
       res.send({ token });
     });
+
     //--------------POST : Create---------------\\
 
     app.post("/products", async (req, res) => {
@@ -86,7 +103,7 @@ async function run() {
 
     //--------------GET : READ--------------\\
 
-    app.get("/userItems", async (req, res) => {
+    app.get("/userItems", verifyToken, async (req, res) => {
       const owner = req.query.owner;
       const query = { owner: owner };
       const cursor = productCollection.find(query);
