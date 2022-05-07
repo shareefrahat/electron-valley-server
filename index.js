@@ -33,7 +33,13 @@ async function run() {
 
     //--------------AUTH : TOKEN-------------\\
 
-    app.get("/getToken");
+    app.post("/getToken", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1d",
+      });
+      res.send({ token });
+    });
     //--------------POST : Create---------------\\
 
     app.post("/products", async (req, res) => {
