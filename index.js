@@ -56,7 +56,7 @@ async function run() {
       res.send({ token });
     });
 
-    //--------------POST : Create---------------\\
+    //--------------POST : CREATE---------------\\
 
     app.post("/products", async (req, res) => {
       const newProduct = req.body;
