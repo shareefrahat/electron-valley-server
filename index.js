@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 function verifyToken(req, res, next) {
-  const authHeader = req.headers.authorization;
+  const authHeader = req?.headers?.authorization;
   if (!authHeader) {
     return res.status(401).send({ message: "Unauthorized access" });
   }
@@ -76,7 +76,7 @@ async function run() {
     //------------PUT : UPDATE-------------\\
 
     app.put("/update/:id", async (req, res) => {
-      const id = req.params.id;
+      const id = req?.params?.id;
       const updateProduct = req.body;
       const filter = { _id: objectId(id) };
 
@@ -94,7 +94,7 @@ async function run() {
 
     //---------------DELETE---------------\\
     app.delete("/products/:id", async (req, res) => {
-      const id = req.params.id;
+      const id = req?.params?.id;
       const query = { _id: objectId(id) };
       const result = await productCollection.deleteOne(query);
       res.send(result);
@@ -104,7 +104,7 @@ async function run() {
 
     app.get("/userItems", verifyToken, async (req, res) => {
       const decodedEmail = req?.decoded?.email;
-      const ownerEmail = req.query?.owner;
+      const ownerEmail = req?.query?.owner;
       if (decodedEmail === ownerEmail) {
         const query = { owner: ownerEmail };
         const cursor = productCollection.find(query);
