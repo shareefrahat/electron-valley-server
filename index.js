@@ -103,8 +103,8 @@ async function run() {
     //--------------GET : READ--------------\\
 
     app.get("/userItems", verifyToken, async (req, res) => {
-      const decodedEmail = req.decoded.email;
-      const ownerEmail = req.query.owner;
+      const decodedEmail = req?.decoded?.email;
+      const ownerEmail = req.query?.owner;
       if (decodedEmail === ownerEmail) {
         const query = { owner: ownerEmail };
         const cursor = productCollection.find(query);
